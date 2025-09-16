@@ -1,7 +1,20 @@
 import React from 'react'
 
 export const GenerateAnimation = () => {
+  const handleAnimationGeneration = (message) => {
+    return {
+      description: message,
+      duration: '5 seconds',
+      style: 'smooth'
+    };
+  };
+
   return (
-    <div>GenerateAnimation</div>
-  )
-}
+    <ChatUI 
+      title="Animation Maker"
+      apiEndpoint="/generate-animation"
+      placeholder="Describe the animation you want to create..."
+      onSendMessage={handleAnimationGeneration}
+    />
+  );
+};
