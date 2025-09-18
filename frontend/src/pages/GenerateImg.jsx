@@ -1,12 +1,10 @@
 import React from 'react'
-
+import ChatUI from '../components/ChatUI';
 
 export const GenerateImg = () => {
   const handleImageGeneration = (message) => {
     return {
-      prompt: message,
-      style: 'realistic',
-      aspectRatio: '1:1'
+      prompt: message
     };
   };
 

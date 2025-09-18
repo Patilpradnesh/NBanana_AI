@@ -1,12 +1,10 @@
-import React from 'react'
-
+import React from 'react';
+import ChatUI from '../components/ChatUI';
 
 export const CartoonStory = () => {
   const handleCartoonGeneration = (message) => {
     return {
-      theme: message,
-      characters: 'create suitable characters',
-      setting: 'appropriate setting'
+      storyText: message
     };
   };
 
