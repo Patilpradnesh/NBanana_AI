@@ -65,80 +65,40 @@ exports.generateImage = async(req,res)=>{
   try {
     const userPrompt = req.body.prompt ||"generate the image of dog riding on scooter with remote control ";
     
-    // Try multiple image generation models in order of preference
-    const imageModels = [
-      "gemini-2.5-flash-image-preview",  // Latest image model
-      "gemini-2.0-flash-preview-image-generation",  // Alternative image model
-      "imagen-3.0-generate-001"  // Imagen model if available
-    ];
+    // Note: Free Gemini tier doesn't support image generation
+    // Providing enhanced creative descriptions instead
+    console.log('Generating creative image description for:', userPrompt);
     
-    let lastError = null;
-    
-    for (const modelName of imageModels) {
-      try {
-        console.log(`Trying image generation with model: ${modelName}`);
-        const model = genAI.getGenerativeModel({ model: modelName });
-        
-        const response = await model.generateContent([userPrompt]);
-        
-        // Check if response contains actual image data
-        const candidate = response.candidates[0];
-        if (candidate && candidate.content && candidate.content.parts) {
-          for (const part of candidate.content.parts) {
-            if (part.inline_data) {
-              // We got an actual image!
-              const imageData = part.inline_data.data;
-              const mimeType = part.inline_data.mime_type;
-              
-              console.log(`SUCCESS: Image generated with model ${modelName}`);
-              res.json({
-                success: true,
-                type: "image",
-                data: `data:${mimeType};base64,${imageData}`,
-                message: `Image generated successfully using ${modelName}!`,
-                model: modelName
-              });
-              return;
-            }
-          }
-        }
-        
-        // If we reach here, no image was generated but no error either
-        console.log(`Model ${modelName} responded but generated no image`);
-        
-      } catch (modelError) {
-        console.error(`Model ${modelName} failed:`, modelError.message);
-        lastError = modelError;
-        continue; // Try next model
-      }
-    }
-    
-    // If all image models failed, fall back to enhanced text description
-    console.log('All image models failed, falling back to enhanced text description');
     const fallbackModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const enhancedPrompt = `Create a vivid, detailed description of an image for: "${userPrompt}"
+    const enhancedPrompt = `Create a vivid, detailed, and creative description of this image concept: "${userPrompt}"
     
-Describe this image as if you're looking at a masterpiece painting. Include:
-- Exact visual details and composition
+Describe it as if you're painting a picture with words. Include:
+- Visual details and composition
 - Colors, lighting, and atmosphere  
-- Style and artistic technique
-- Every element that would be visible
+- Textures and materials
+- Emotions and mood
+- Artistic style suggestions
 
-Write it as if you're describing a real image you can see. Be creative and detailed but conversational.`;
-
-    const textResponse = await fallbackModel.generateContent([enhancedPrompt]);
-    const cleanResponse = textResponse.response.text()
+Make it so descriptive that someone could almost see the image just from your words. Use engaging, conversational language without any formatting symbols.`;
+    
+    const response = await fallbackModel.generateContent([enhancedPrompt]);
+    const description = response.response.text();
+        
+    // Clean up formatting
+    const cleanResponse = description
       .replace(/\*\*(.*?)\*\*/g, '$1')
-      .replace(/\*(.*?)\*/g, '$1')
+      .replace(/\*(.*?)\*/g, '$1') 
       .replace(/#{1,6}\s/g, '')
+      .replace(/`{1,3}(.*?)`{1,3}/g, '$1')
       .trim();
     
     res.json({
       success: true,
-      type: "text", 
-      data: cleanResponse,
-      message: "Generated detailed image description (actual image generation unavailable)",
-      note: "Image generation models are currently unavailable. This is a detailed description instead."
+      type: "image-description",
+      data: `🎨 Here's a creative visualization of your idea:\n\n${cleanResponse}\n\n💡 Note: I'm currently providing detailed creative descriptions. For actual image generation, you would need access to paid AI image services like DALL-E, Midjourney, or Stable Diffusion.`,
+      message: "Creative image description generated!",
+      prompt: userPrompt,
+      note: "Enhanced description - actual image generation requires paid services"
     });
     
   } catch (error) {
@@ -327,75 +287,60 @@ Format as a detailed transformation description.`;
         .replace(/##/g, '')
         .trim();
 
-      // Generate a new image based on the analysis using image generation models
-      const imageModels = [
-        "gemini-2.5-flash-image-preview",  // Nano Banana
-        "gemini-2.0-flash-preview-image-generation",  // Alternative image model
-      ];
+      // Note: Free Gemini tier doesn't support image generation
+      // Providing detailed transformation analysis instead
+      console.log('Creating detailed transformation analysis for Time Travel Camera');
       
-      let transformedImageGenerated = false;
-      
-      for (const modelName of imageModels) {
-        try {
-          console.log(`Trying image transformation with model: ${modelName}`);
-          const imageGenModel = genAI.getGenerativeModel({ model: modelName });
-          
-          const imageGenPrompt = `Transform this image to ${timeEra} ${style} style: ${cleanPrompt}
-          
-Create a ${style} ${timeEra} transformation with:
-- Authentic period clothing and accessories
-- Period-appropriate background and setting
-- Proper lighting and color palette for the era
-- Historical accuracy and artistic quality`;
+      const transformPrompt = `Based on the uploaded image, create a comprehensive transformation guide for ${timeEra} ${style} style:
 
-          const imageResult = await imageGenModel.generateContent([imageGenPrompt]);
-          
-          // Check if we got an actual image
-          const candidate = imageResult.candidates[0];
-          if (candidate && candidate.content && candidate.content.parts) {
-            for (const part of candidate.content.parts) {
-              if (part.inline_data) {
-                // SUCCESS: We got an actual transformed image!
-                const imageData = part.inline_data.data;
-                const mimeType = part.inline_data.mime_type;
-                
-                console.log(`SUCCESS: Image transformed with model ${modelName}`);
-                res.json({
-                  success: true,
-                  type: "photo-transform",
-                  feature: "Time Travel Camera",
-                  data: `data:${mimeType};base64,${imageData}`,
-                  message: `Photo successfully transformed to ${timeEra} ${style} style!`,
-                  originalAnalysis: cleanPrompt,
-                  targetEra: timeEra,
-                  targetStyle: style,
-                  model: modelName,
-                  note: "Actual image transformation completed"
-                });
-                return;
-              }
-            }
-          }
-          
-          console.log(`Model ${modelName} responded but generated no image for transformation`);
-          
-        } catch (modelError) {
-          console.error(`Image transformation model ${modelName} failed:`, modelError.message);
-          continue; // Try next model
-        }
-      }
+${cleanPrompt}
+
+Now provide specific instructions for how this transformation would be achieved:
+
+1. CLOTHING & FASHION:
+- What period-appropriate clothing would replace current items
+- Specific garments, accessories, and styling for ${timeEra}
+- Color palette and fabric choices authentic to the era
+
+2. HAIRSTYLE & MAKEUP:
+- Period-appropriate hairstyling for ${timeEra}
+- Makeup trends and techniques of that time
+- Facial hair styles if applicable
+
+3. BACKGROUND & SETTING:
+- Environment that matches ${timeEra}
+- Architecture, furniture, and decorative elements
+- Lighting style typical of the period
+
+4. ARTISTIC STYLE:
+- ${style} characteristics and techniques
+- Color grading and visual effects
+- Overall aesthetic approach
+
+Make this transformation guide detailed and practical, as if someone could use it to recreate the look.`;
       
-      // If image generation failed, fallback to text description with better message
-      console.log('Image transformation failed, providing analysis description');
+      const transformModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const transformResult = await transformModel.generateContent([transformPrompt]);
+      const transformGuide = transformResult.response.text();
+      
+      // Clean up formatting
+      const cleanGuide = transformGuide
+        .replace(/\*\*(.*?)\*\*/g, '$1')
+        .replace(/\*(.*?)\*/g, '$1')
+        .replace(/#{1,6}\s/g, '')
+        .replace(/`{1,3}(.*?)`{1,3}/g, '$1')
+        .trim();
+      
       res.json({
         success: true,
         type: "photo-transform",
         feature: "Time Travel Camera", 
-        data: `📸 I've analyzed your photo and here's how it would look transformed to ${timeEra} ${style} style:\n\n${cleanPrompt}\n\n💡 Note: I can currently provide detailed transformation descriptions. For actual image transformation, the AI image generation service is temporarily unavailable.`,
+        data: `📸 Based on your uploaded photo, here's your detailed ${timeEra} ${style} transformation guide:\n\n${cleanGuide}\n\n💡 Note: I can provide expert transformation analysis and detailed guides. For actual photo editing, you would need image editing software or paid AI transformation services.`,
         originalAnalysis: cleanPrompt,
+        transformationGuide: cleanGuide,
         targetEra: timeEra,
         targetStyle: style,
-        note: "Analysis completed - image generation temporarily unavailable"
+        note: "Professional transformation analysis completed"
       });
       
     } else {

@@ -10,8 +10,8 @@ const ChatUI = ({ title, apiEndpoint, placeholder, onSendMessage, supportsFileUp
         guidance: `💡 How to use this chat:\n• Ask me any question in natural language\n• I can help with coding, writing, math, explanations, and creative tasks\n• Feel free to have a normal conversation - I remember our chat history\n• Type your message and press Enter to send`
       },
       '/generate-image': {
-        welcome: `Welcome to ${title}! I can try to generate actual images using Google's AI models, or provide detailed image descriptions.`,
-        guidance: `🎨 How to use Image Generator:\n• Describe the image you want in detail (e.g., "a sunset over mountains with purple clouds")\n• Be specific about style, colors, mood, and elements\n• You can ask for different art styles like "photorealistic", "cartoon", "oil painting", etc.\n• I'll try to generate an actual image, or provide a detailed description if image generation is unavailable\n• Each conversation maintains context, so you can refine ideas`
+        welcome: `Welcome to ${title}! I provide detailed creative visualizations and image concepts.`,
+        guidance: `🎨 How to use Image Generator:\n• Describe the image you want in detail (e.g., "a sunset over mountains with purple clouds")\n• Be specific about style, colors, mood, and elements\n• You can ask for different art styles like "photorealistic", "cartoon", "oil painting", etc.\n• I'll provide vivid, detailed descriptions that paint a picture with words\n• Note: Currently providing creative visualizations (actual image generation requires paid AI services)`
       },
       '/generate-animation': {
         welcome: `Welcome to ${title}! I create detailed animation concepts and descriptions for you.`,
@@ -26,8 +26,8 @@ const ChatUI = ({ title, apiEndpoint, placeholder, onSendMessage, supportsFileUp
         guidance: `📢 How to use Ad Maker:\n• Describe your product, service, or brand\n• Mention your target audience and goals\n• Specify ad type (social media, print, video script, etc.)\n• I'll create persuasive ad copy and marketing concepts\n• We can refine and adapt ads through our conversation`
       },
       '/transform-photo': {
-        welcome: `Welcome to ${title}! I can transform your photos into different historical eras using AI.`,
-        guidance: `📸 How to use Time Travel Camera:\n• Upload an image using the 📎 button\n• Describe the era you want (Victorian, Medieval, 1920s, etc.)\n• Specify the style (vintage, sepia, artistic, etc.)\n• I'll analyze your photo and generate a transformed version\n• You can download the transformed image directly from the chat`
+        welcome: `Welcome to ${title}! I provide professional photo transformation analysis and guides.`,
+        guidance: `📸 How to use Time Travel Camera:\n• Upload an image using the 📎 button\n• Describe the era you want (Victorian, Medieval, 1920s, etc.)\n• Specify the style (vintage, sepia, artistic, etc.)\n• I'll provide detailed transformation analysis and step-by-step guides\n• Note: Currently providing expert transformation analysis (actual photo editing requires image editing software or paid AI services)`
       }
     };
     
