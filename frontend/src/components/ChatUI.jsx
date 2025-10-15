@@ -146,7 +146,7 @@ const ChatUI = ({ title, apiEndpoint, placeholder, onSendMessage, supportsFileUp
         { headers: { 'Content-Type': 'multipart/form-data' } } : 
         { headers: { 'Content-Type': 'application/json' } };
         
-      const response = await axios.post(`/api${apiEndpoint}`, requestData, config);
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api${apiEndpoint}`, requestData, config);
       
       // Handle different response types (text or image)
       let botMessage;

@@ -59,7 +59,7 @@ export const Home = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post('/api/chat', { message: input });
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/chat`, { message: input });
       setMessages(prev => [
         ...prev,
         { from: 'nano', text: res.data && res.data.response ? res.data.response : "No response from NanoBanana." }
