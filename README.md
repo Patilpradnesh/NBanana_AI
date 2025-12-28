@@ -56,4 +56,40 @@ This project was built to move beyond static or UI-only demos and showcase real-
 ---
 
 ## 📂 Project Structure
+NBanana_AI/
+├── Backend/
+│ ├── controllers/
+│ │ └── NBController.js
+│ ├── routes/
+│ │ └── NBRoutes.js
+│ ├── photoTransformOptions.js
+│ ├── index.js
+│ └── package.json
+│
+├── frontend/
+│ ├── src/
+│ ├── public/
+│ └── package.json
+│
+└── README.md
+
+
+
+---
+
+## ⚙️ Installation & Setup
+
+### Prerequisites
+- Node.js (v16+ recommended)
+- npm or yarn
+
+### Backend Setup
+```bash
+cd Backend
+npm install
+npm start
+
+cd frontend
+npm install
+npm run dev
 
